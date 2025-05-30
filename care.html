@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skincare Routine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Emilys Candy', cursive;
+      background-color: #C3CDAB;
+      color: #3B4D3B;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #3B4D3B;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Emilys Candy', cursive;
+      transition: background-color 0.3s ease;
+      z-index: 1000;
+    }
+
+    .back-button:hover {
+      background-color: #2c3b2c;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      height: 30px;
+      background-color: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 30px 0;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      display: none;
+      animation: fadeIn 1s ease;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: #3B4D3B;
+      transition: width 0.3s ease;
+    }
+
+    .round-button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #3B4D3B;
+      color: white;
+      border: none;
+      font-size: 18px;
+      font-family: 'Emilys Candy', cursive;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      box-shadow: 0 0 0 rgba(59, 77, 59, 0.4);
+      transition: background-color 0.3s ease;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .round-button:hover {
+      background-color: #2c3b2c;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59, 77, 59, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(59, 77, 59, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 77, 59, 0); }
+    }
+
+    .instructions, .final-results {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .final-results {
+      animation: fadeInUp 1.5s ease forwards;
+    }
+
+    .comparison-table {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .comparison-table div {
+      font-size: 20px;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 28px; }
+      .round-button {
+        font-size: 18px;
+        width: 70px;
+        height: 70px;
+      }
+      .comparison-table {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-button" onclick="location.href='dashboard.html'">← Back to Dashboard</button>
+
+  <h1>Ready to scan your skin?</h1>
+  <button class="round-button" id="startScan">Start</button>
+
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="instructions" id="massageInstructions">
+    <h1>Switch your device to massage mode</h1>
+    <p>You may also apply a hydration product to enhance its effect.</p>
+    <button class="round-button" id="startMassage">Start</button>
+  </div>
+
+  <div class="final-results" id="finalResults">
+    <h1>Routine Complete!</h1>
+    <div class="comparison-table">
+      <div>
+        <p><strong>Before:</strong></p>
+        <p>Hydration: <span id="beforeHydration"></span>%</p>
+        <p>Inflammation: <span id="beforeInflammation"></span>%</p>
+        <p>Spots: <span id="beforeSpots"></span>%</p>
+        <p>Wrinkles: <span id="beforeWrinkles"></span>%</p>
+      </div>
+      <div>
+        <p><strong>After:</strong></p>
+        <p>Hydration: <span id="afterHydration"></span>%</p>
+        <p>Inflammation: <span id="afterInflammation"></span>%</p>
+        <p>Spots: <span id="afterSpots"></span>%</p>
+        <p>Wrinkles: <span id="afterWrinkles"></span>%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bubble sound -->
+  <audio id="bubbleSound" src="bubbles.mp3" preload="auto"></audio>
+
+  <script>
+    const startScan = document.getElementById('startScan');
+    const startMassage = document.getElementById('startMassage');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.getElementById('progressContainer');
+    const title = document.querySelector('h1');
+    const massageInstructions = document.getElementById('massageInstructions');
+    const finalResults = document.getElementById('finalResults');
+    const bubbleSound = document.getElementById('bubbleSound');
+
+    const beforeHydration = document.getElementById('beforeHydration');
+    const beforeInflammation = document.getElementById('beforeInflammation');
+    const beforeSpots = document.getElementById('beforeSpots');
+    const beforeWrinkles = document.getElementById('beforeWrinkles');
+    const afterHydration = document.getElementById('afterHydration');
+    const afterInflammation = document.getElementById('afterInflammation');
+    const afterSpots = document.getElementById('afterSpots');
+    const afterWrinkles = document.getElementById('afterWrinkles');
+
+    let hydration = 0, inflammation = 0, spots = 0, wrinkles = 0, initialSpots = 0;
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function playBubbleSound() {
+      bubbleSound.currentTime = 0;
+      bubbleSound.play();
+    }
+
+    function runScan() {
+      playBubbleSound();
+      startScan.style.display = 'none';
+      title.innerText = 'Scanning your skin...';
+      progressContainer.style.display = 'block';
+
+      let width = 0;
+      const scanInterval = setInterval(() => {
+        width += 1;
+        progressBar.style.width = width + '%';
+        if (width >= 100) {
+          clearInterval(scanInterval);
+          progressContainer.style.display = 'none';
+
+          hydration = random(30, 65);
+          inflammation = random(20, 40);
+          spots = random(25, 60);
+          wrinkles = random(30, 60);
+          initialSpots = spots;
+
+          beforeHydration.textContent = hydration;
+          beforeInflammation.textContent = inflammation;
+          beforeSpots.textContent = spots;
+          beforeWrinkles.textContent = wrinkles;
+
+          title.innerText = '';
+          massageInstructions.style.display = 'block';
+        }
+      }, 100);
+    }
+
+    function runMassage() {
+      playBubbleSound();
+      startMassage.style.display = 'none';
+      massageInstructions.style.display = 'none';
+      title.innerText = 'Massage in progress...';
+      progressBar.style.width = '0%';
+      progressContainer.style.display = 'block';
+
+      let width = 0;
+      const massageInterval = setInterval(() => {
+        width += 1;
+        progressBar.style.width = width + '%';
+
+        if (hydration < 95) hydration += random(1, 2);
+        if (inflammation > 5) inflammation -= random(1, 2);
+        if (spots > initialSpots - 10) spots -= random(1, 2);
+        wrinkles -= random(0, 1);
+
+        hydration = Math.min(hydration, 95);
+        inflammation = Math.max(inflammation, 0);
+        spots = Math.max(spots, 0);
+        wrinkles = Math.max(wrinkles, 0);
+
+        const hydrationOK = hydration >= 90;
+        const inflammationOK = inflammation < 15;
+        const spotsOK = spots <= initialSpots - 10;
+        const done = hydrationOK && inflammationOK && spotsOK;
+
+        if (width >= 100 || done) {
+          clearInterval(massageInterval);
+          progressContainer.style.display = 'none';
+          title.innerText = '';
+          showFinalResults();
+        }
+      }, 100);
+    }
+
+    function showFinalResults() {
+      afterHydration.textContent = hydration;
+      afterInflammation.textContent = inflammation;
+      afterSpots.textContent = spots;
+      afterWrinkles.textContent = wrinkles;
+      finalResults.style.display = 'block';
+      playBubbleSound();
+    }
+
+    startScan.addEventListener('click', runScan);
+    startMassage.addEventListener('click', runMassage);
+  </script>
+
+</body>
+</html>

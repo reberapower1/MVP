@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Ofélia Timeless</title>
+  <link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Emilys Candy', cursive;
+      background-color: #C3CDAB;
+      color: #3B4D3B;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .option-box {
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 60px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      font-size: 22px;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      min-height: 180px;
+    }
+
+    .option-box:hover {
+      transform: scale(1.02);
+    }
+
+    .option-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    .option-box span {
+      position: relative;
+      z-index: 1;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .care::before {
+      background-image: url('care.jpg');
+    }
+
+    .progress::before {
+      background-image: url('progress.jpg');
+    }
+
+    .recommendations::before {
+      background-image: url('recomendacoes.jpg');
+    }
+
+    .green::before {
+      background-image: url('green.jpg');
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 30px;
+      }
+
+      .option-box {
+        font-size: 20px;
+        padding: 50px 15px;
+        min-height: 160px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .option-box {
+        font-size: 18px;
+        padding: 40px 15px;
+        min-height: 140px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome!</h1>
+
+  <div class="grid">
+    <div class="option-box care" onclick="location.href='care.html'">
+      <span>Start Skincare Routine</span>
+    </div>
+
+    <div class="option-box progress" onclick="location.href='progress.html'">
+      <span>Check Skin Progress</span>
+    </div>
+
+    <div class="option-box recommendations" onclick="location.href='recomendations.html'">
+      <span>Get Product Recommendations</span>
+    </div>
+
+    <div class="option-box green" onclick="location.href='green.html'">
+      <span>Green Section</span>
+    </div>
+  </div>
+</body>
+</html>
